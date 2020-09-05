@@ -1,7 +1,7 @@
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'covid',  # 데이터베이스 이름
+        'NAME': 'todo',  # 데이터베이스 이름
         'USER': 'root',  # 유저 이름
         'PASSWORD': '##tkakrnl12',  # 패스워드
         'PORT': '3306',
