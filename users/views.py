@@ -4,6 +4,7 @@ import re
 import bcrypt
 import requests
 
+from .models                import User
 from django.views           import View
 from django.http            import HttpResponse, JsonResponse
 from django.core.validators import validate_email
@@ -28,7 +29,7 @@ class SignUpView(View):
             User(
                 email    = data['email'],
                 username = data['username'],
-                password = data['password'],
+                password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             ).save()
 
             return HttpResponse(status = 200)
