@@ -88,5 +88,6 @@ class TokenCheckView(View):
                                   algorithms = ALGORITHM)
 
         user         = User.objects.get(email = payload["email"])
+        print("back user" , user.email)
 
-        return JsonResponse({"data" : user } , statu = 200)
+        return JsonResponse({"data" : f"{user.email}" } , status = 200)
