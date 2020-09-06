@@ -79,3 +79,14 @@ class SignInView(View):
                     values("email"))
 
         return JsonResponse({"data" : list(data)}, status = 200)
+
+class TokenCheckView(View):
+    def get(self , request):
+        auth_token   = request.headers.get('Authorization', None)
+        payload      = jwt.decode(auth_token,
+                                  SECRET_KEY['secret'],
+                                  algorithms = ALGORITHM)
+
+        user         = User.objects.get(email = payload["email"])
+
+        return JsonResponse({"data" : user } , statu = 200)
