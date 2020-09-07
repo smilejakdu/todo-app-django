@@ -70,8 +70,14 @@ class SignInView(View):
         except KeyError:
             return JsonResponse({"message": "INVALID_KEYS"}, status=400)
 
+        except ValidationError:
+            return JsonResponse({"message" : "validation_error"} , status = 400)
+
         except User.DoesNotExist:
             return JsonResponse({"message": "INVALID_USER"}, status=400)
+
+        except Exception as e:
+            return JsonResponse({"message" : e} , status = 400)
 
     def get(self , request):
         data = list(User.
@@ -88,6 +94,5 @@ class TokenCheckView(View):
                                   algorithms = ALGORITHM)
 
         user         = User.objects.get(email = payload["email"])
-        print("back user" , user.email)
 
         return JsonResponse({"data" : f"{user.email}" } , status = 200)
