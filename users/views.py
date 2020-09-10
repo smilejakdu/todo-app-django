@@ -23,6 +23,12 @@ class SignUpView(View):
 
             validate_email(data['email'])
 
+            if User.objects.filter(email = data['email']).exists():
+                return JsonResponse({"message" : "EXISTS_EMAIL"} , status = 400)
+
+            if User.objects.filter(username = data['username']).exists():
+                return JsonResponse({"message" : "EXISTS_USERNAME"} , status = 400)
+
             if len(data['password']) < 5:
                 return JsonResponse({"message":"SHORT_PASSWORD"} , status = 400)
 
@@ -33,7 +39,6 @@ class SignUpView(View):
             ).save()
 
             return HttpResponse(status = 200)
-
 
         except KeyError:
             return JsonResponse({"message" : "INVALID_KEY"},status = 400)
@@ -95,4 +100,4 @@ class TokenCheckView(View):
 
         user         = User.objects.get(email = payload["email"])
 
-        return JsonResponse({"data" : f"{user.email}" } , status = 200)
+        return JsonResponse({"data" : f"{user.username}" } , status = 200)

@@ -39,11 +39,11 @@ class TodoView(View):
         try:
 
             data = {
-                'data'        : [{
-                    'id'      : todo.id,
-                    'title'   : todo.title,
-                    'content' : todo.content,
-                    'email'   : todo.user.email,
+                'data'         : [{
+                    'id'       : todo.id,
+                    'title'    : todo.title,
+                    'content'  : todo.content,
+                    'username' : todo.user.username,
                 }for todo in todo_data]}
 
             return JsonResponse({"data" : data} , status = 200)
@@ -84,6 +84,26 @@ class TodoDetailView(View):
 
         except ValueError:
             return HttpResponse(status = 400)
+
+        except Exception as e :
+            return JsonResponse({"message" : e} , status = 400)
+
+class TodoTitleSearchView(View):
+    def get(self,request):
+        query = request.GET.get("query",None)
+
+        try:
+            if len(query) > 0:
+
+                data = (Todo.
+                        objects.
+                        filter(title__icontains = query).
+                        values())
+
+                return JsonResponse({"data" : list(data)} , status = 200)
+
+        except ValueError:
+            return JsonResponse({"message" : "invalid_error"} , status = 400)
 
         except Exception as e :
             return JsonResponse({"message" : e} , status = 400)
