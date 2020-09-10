@@ -51,6 +51,24 @@ class TodoView(View):
         except Exception as e:
             return JsonResponse({"message" : e} , status = 400)
 
+class TodoUserView(View):
+    @login_check
+    def get(self , request):
+        try:
+            data = list(User.
+                        objects.
+                        prefetch_related("todo_set").
+                        get(id=request.user.id).
+                        todo_set.
+                        values("id",
+                               "title",
+                               "content"))
+
+            return JsonResponse({"data" : data} , status = 200)
+
+        except Exception as e:
+            return JsonResponse({"message":e},status = 400)
+
 class TodoDetailView(View):
     @login_check
     def post(self , request , todo_id):
