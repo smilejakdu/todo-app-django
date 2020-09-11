@@ -140,3 +140,36 @@ class SearchView(View):
 
         except Exception as e :
             return JsonResponse({"message" : e} , status = 400)
+
+
+class MyListSearchView(View):
+    @login_check
+    def get(self,request):
+        query = request.GET.get("query",None)
+
+        try:
+            if len(query) > 0:
+                todo_data = (User.
+                             objects.
+                             prefetch_related("todo_set").
+                             get(id=5).
+                             todo_set.
+                             filter(title__icontains=query).all())
+
+                data = {
+                    'data'           : [{
+                        'id'         : todo.id,
+                        'title'      : todo.title,
+                        'content'    : todo.content,
+                        'username'   : todo.user.username,
+                        'created_at' : f"{todo.created_at.year}-{todo.created_at.month}-{todo.created_at.day}",
+                    }for todo in todo_data]}
+
+                return JsonResponse({"data" : data} , status = 200)
+
+        except ValueError:
+            return JsonResponse({"message" : "invalid_error"} , status = 400)
+
+        except Exception as e :
+            return JsonResponse({"message" : e} , status = 400)
+
