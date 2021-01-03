@@ -10,7 +10,7 @@ class TodoView(View):
     @login_check
     def post(self ,request):
         data = json.loads(request.body)
-
+        print(data)
         try:
             for d in data:
                 if not data[d]:
@@ -32,9 +32,7 @@ class TodoView(View):
 
     def get(self , request):
 
-        todo_data = (Todo.
-                     objects.
-                     select_related("user").all())
+        todo_data = Todo.objects.all().order_by('-created_at')
 
         try:
 
@@ -60,7 +58,7 @@ class TodoUserView(View):
                          objects.
                          prefetch_related("todo_set").
                          get(id=request.user.id).
-                         todo_set.all())
+                         todo_set.all().order_by('-created_at'))
 
             data = {
                 'data'           : [{
@@ -80,6 +78,7 @@ class TodoDetailView(View):
     @login_check
     def post(self , request , todo_id):
         data = json.loads(request.body)
+        print(data)
         try:
             for d in data:
                 if not data[d]:

@@ -9,7 +9,7 @@ from django.views           import View
 from django.http            import HttpResponse, JsonResponse
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from todo_app.my_settings   import SECRET_KEY,   ALGORITHM
+from todo_app.my_settings   import SECRET_KEY, ALGORITHM
 
 
 class SignUpView(View):
@@ -42,9 +42,6 @@ class SignUpView(View):
 
         except KeyError:
             return JsonResponse({"message" : "INVALID_KEY"},status = 400)
-
-        except ValidationError:
-            return HttpResponse(status=400)
 
         except Exception as e:
             return JsonResponse({"message" : e},status = 400)
